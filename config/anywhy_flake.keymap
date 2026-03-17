@@ -12,12 +12,6 @@
             bindings = <&soft_off>;
             key-positions = <14 27 38>; // Keys Q, S, Z
         };
-
-        grave {
-            bindings = <&kp GRAVE>;
-            key-positions = <13 25>;
-            layers = <3>;
-        };
     };
 
     macros {
