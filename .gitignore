@@ -1,21 +1,23 @@
 # Build artifacts
-build/
-artifacts/
+/build
+/artifacts
+/temp
+/optional
 
 # ZMK
-zephyr/
-!zephyr/module.yml
+/zephyr
+/!zephyr/module.yml
 
 # West managed directories
-.west/
-modules/
-tools/
+/.west
+/modules
+/tools
 
 # West projects from config/west.yml
-zmk/
-prospector-zmk-module/
-zmk-dongle-display/
-nice-view-gem/
-zmk-dongle-screen/
-zmk-nice-oled/
-hammerbeam-slideshow/
+/zmk
+/prospector-zmk-module
+/zmk-dongle-display
+/nice-view-gem
+/zmk-dongle-screen
+/zmk-nice-oled
+/hammerbeam-slideshow
