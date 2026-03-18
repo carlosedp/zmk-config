@@ -7,7 +7,6 @@ on:
       - "config/*.dtsi"
       - "keymap-drawer/*.yaml"
       - ".github/workflows/draw-keymaps.yml"
-      # - 'boards/*/*/*.keymap'
 
 jobs:
   draw:
@@ -21,3 +20,4 @@ jobs:
       output_folder: "keymap-drawer" # path to save produced SVG and keymap YAML files
       parse_args: "" # map of extra args to pass to `keymap parse`, e.g. "corne:'-l Def Lwr Rse' cradio:''"
       draw_args: "anywhy_flake:'--dts-layout ./boards/shields/anywhy_flake/anywhy_flake.dtsi'" # map of extra args to pass to `keymap draw`
+      fail_on_error: ${{ fromJSON(true) }}
