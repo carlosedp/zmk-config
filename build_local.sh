@@ -503,6 +503,7 @@ Examples:
   $0 list                                       # List all available targets
   $0 build                                      # Build all firmware from build.yaml
   $0 build my_keyboard_left                     # Build specific target
+  $0 build 'anywhy*'                            # Build all targets matching a wildcard
   $0 clean                                      # Clean build artifacts
   $0 clean my_keyboard_left                     # Clean specific target
   $0 clean_all                                  # Clean all west dependencies
@@ -559,9 +560,41 @@ list)
   list_targets
   ;;
 build)
-  # If second argument provided, build specific target
   if [ -n "${2:-}" ]; then
-    build_target "$2"
+    # Wildcard pattern: build all matching targets
+    if [[ "${2}" == *[\*\?\[]* ]]; then
+      pattern="${2}"
+      matched=0
+      failed=0
+      build_start_time=$(date +%s)
+      while IFS='|' read -r board shield snippet cmake_args artifact_name; do
+        # shellcheck disable=SC2053
+        if [[ "$artifact_name" == $pattern ]]; then
+          matched=$((matched + 1))
+          build_target "$artifact_name" || failed=$((failed + 1))
+        fi
+      done < <(parse_build_config)
+      build_end_time=$(date +%s)
+      build_duration=$((build_end_time - build_start_time))
+      if [ $matched -eq 0 ]; then
+        log_error "No targets match pattern '$pattern'"
+        exit 1
+      fi
+      echo ""
+      if [ $failed -eq 0 ]; then
+        log_info "========================================"
+        log_success "$matched build(s) completed successfully in ${build_duration}s!"
+        log_info "========================================"
+      else
+        log_error "========================================"
+        log_error "Build completed with $failed failure(s) in ${build_duration}s"
+        log_error "========================================"
+        exit 1
+      fi
+    else
+      # Exact name: build specific target
+      build_target "$2"
+    fi
   else
     build
   fi
