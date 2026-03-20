@@ -69,6 +69,15 @@ parse_build_config() {
 
   # Simple YAML parser that extracts build configurations
   # This avoids external dependencies like yq
+
+  # Strip inline YAML comments and trim trailing whitespace from a value
+  strip_comment() {
+    local val="$1"
+    # Remove everything from the first unquoted ' #' onward, then trim trailing spaces
+    val="${val%%\ \#*}"
+    echo "${val%"${val##*[![:space:]]}"}"
+  }
+
   local in_include=0
   local board="" shield="" snippet="" cmake_args="" artifact_name=""
 
@@ -96,19 +105,19 @@ parse_build_config() {
           echo "${board}|${shield}|${snippet}|${cmake_args}|${out_name}"
         fi
         # Start new config
-        board="${BASH_REMATCH[1]}"
+        board="$(strip_comment "${BASH_REMATCH[1]}")"
         shield=""
         snippet=""
         cmake_args=""
         artifact_name=""
       elif [[ "$line" =~ ^[[:space:]]+shield:[[:space:]]*(.+) ]]; then
-        shield="${BASH_REMATCH[1]}"
+        shield="$(strip_comment "${BASH_REMATCH[1]}")"
       elif [[ "$line" =~ ^[[:space:]]+snippet:[[:space:]]*(.+) ]]; then
-        snippet="${BASH_REMATCH[1]}"
+        snippet="$(strip_comment "${BASH_REMATCH[1]}")"
       elif [[ "$line" =~ ^[[:space:]]+cmake-args:[[:space:]]*(.+) ]]; then
-        cmake_args="${BASH_REMATCH[1]}"
+        cmake_args="$(strip_comment "${BASH_REMATCH[1]}")"
       elif [[ "$line" =~ ^[[:space:]]+artifact-name:[[:space:]]*(.+) ]]; then
-        artifact_name="${BASH_REMATCH[1]}"
+        artifact_name="$(strip_comment "${BASH_REMATCH[1]}")"
       fi
     fi
   done <"$BUILD_CONFIG"
