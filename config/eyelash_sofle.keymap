@@ -52,7 +52,7 @@
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
-            bindings = <&mo WINDOWS_FN>, <&to WINDOWS_FN>;
+            bindings = <&mo WINDOWS_FN>, <&tog WINDOWS_FN>;
         };
 
         macfn_mt: momentary_or_toggle_mac_fn {
@@ -60,7 +60,7 @@
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
-            bindings = <&mo MAC_FN>, <&to MAC_FN>;
+            bindings = <&mo MAC_FN>, <&tog MAC_FN>;
         };
     };
 
