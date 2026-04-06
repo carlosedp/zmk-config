@@ -1,6 +1,7 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/outputs.h>
 
 &soft_off { hold-time-ms = <2000>; };
 
@@ -54,30 +55,6 @@
         };
     };
 
-    // behaviors {
-    //     hml: home_row_mod_left {
-    //         compatible = "zmk,behavior-hold-tap";
-    //         #binding-cells = <2>;
-    //         flavor = "balanced";
-    //         require-prior-idle-ms = <150>;
-    //         tapping-term-ms = <200>;
-    //         quick-tap-ms = <175>;
-    //         bindings = <&kp>, <&kp>;
-    //         hold-trigger-key-positions = < 0 1 2 3 4 5 12 13 14 15 16 17 24 25 26 27 28 29 36 37 38 39 40>; // List of keys on the left side of the keyboard
-    //         hold-trigger-on-release;
-    //     };
-    //     hmr: home_row_mod_right {
-    //         compatible = "zmk,behavior-hold-tap";
-    //         #binding-cells = <2>;
-    //         flavor = "balanced";
-    //         require-prior-idle-ms = <150>;
-    //         tapping-term-ms = <200>;
-    //         quick-tap-ms = <175>;
-    //         bindings = <&kp>, <&kp>;
-    //         hold-trigger-key-positions = < 6 7 8 9 10 11 18 19 20 21 22 23 30 31 32 33 34 35 41 42 43 44 45>; // List of keys on the right side of the keyboard
-    //         hold-trigger-on-release;
-    //     };
-    // };
     keymap {
         compatible = "zmk,keymap";
 
@@ -103,7 +80,7 @@
             bindings = <
 &none      &kp F1        &kp F2          &kp F3        &kp F4        &kp F5             &kp F6  &kp F7      &kp F8        &kp F9        &kp F10     &none
 &none      &bt BT_SEL 0  &bt BT_SEL 1    &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4       &none   &none       &none         &kp F11       &kp F12     &none
-&none      &bt BT_CLR    &bt BT_CLR_ALL  &none         &none         &studio_unlock     &none   &none       &none         &kp LBKT      &kp RBKT    &none
+&none      &bt BT_CLR    &bt BT_CLR_ALL  &none         &out OUT_USB  &out OUT_BLE       &none   &none       &none         &kp LBKT      &kp RBKT    &none
            &soft_off     &trans          &trans        &trans        &kp DEL            &trans  &trans      &trans        &trans        &trans
             >;
         };
