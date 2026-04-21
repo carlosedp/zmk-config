@@ -31,6 +31,7 @@ ENV="-e CMAKE_PREFIX_PATH=/zmk/zephyr:${CMAKE_PREFIX_PATH:-}"
 COMMAND="$RUNTIME run --rm --workdir /zmk -v $(pwd):/zmk -v /tmp:/temp $ENV $IMG"
 BUILD_CONFIG="${BUILD_CONFIG:-build.yaml}"
 INCREMENTAL="${INCREMENTAL:-false}" # Set to true to skip -p (pristine) flag for faster incremental builds
+EXTRA_CMAKE_ARGS=() # Extra cmake defines passed via -D flags on the command line
 
 log_info() {
   echo -e "\033[1;34m[INFO]\033[0m $1"
@@ -223,6 +224,43 @@ build_target() {
         # Split cmake_args by spaces and add to array
         read -ra extra_args <<<"$cmake_args"
         cmake_args_array+=("${extra_args[@]}")
+      fi
+
+      # Handle extra -D args: CONFIG_* overrides are written to a temp .conf file
+      # so they are merged AFTER the main .conf file and take precedence over it.
+      # Other cmake -D args are passed directly to cmake.
+      if [ ${#EXTRA_CMAKE_ARGS[@]} -gt 0 ]; then
+        local kconfig_overrides=()
+        local extra_cmake_only=()
+        for arg in "${EXTRA_CMAKE_ARGS[@]}"; do
+          if [[ "$arg" =~ ^-DCONFIG_ ]]; then
+            local kv="${arg#-D}"              # strip leading -D
+            local key="${kv%%=*}"
+            local val="${kv#*=}"
+            # Auto-quote string values: if not bool/int/hex and not already quoted, add quotes
+            if [[ ! "$val" =~ ^(y|n|Y|N)$ ]] && [[ ! "$val" =~ ^[0-9]+$ ]] && \
+               [[ ! "$val" =~ ^0x[0-9a-fA-F]+$ ]] && [[ ! "$val" =~ ^\".*\"$ ]]; then
+              val="\"${val}\""
+            fi
+            kconfig_overrides+=("${key}=${val}")
+          else
+            extra_cmake_only+=("$arg")
+          fi
+        done
+
+        if [ ${#kconfig_overrides[@]} -gt 0 ]; then
+          local temp_conf
+          temp_conf=$(mktemp /tmp/zmk_override_XXXXXX.conf)
+          for kv in "${kconfig_overrides[@]}"; do
+            echo "$kv" >>"$temp_conf"
+          done
+          log_info "Kconfig overrides: ${kconfig_overrides[*]}"
+          cmake_args_array+=("-DEXTRA_CONF_FILE=/temp/$(basename "$temp_conf")")
+        fi
+
+        if [ ${#extra_cmake_only[@]} -gt 0 ]; then
+          cmake_args_array+=("${extra_cmake_only[@]}")
+        fi
       fi
 
       # Execute build
@@ -522,6 +560,9 @@ Examples:
   INCREMENTAL=true $0 build my_keyboard_left    # Faster incremental build
   BUILD_CONFIG=custom.yaml $0 build             # Use custom build config
   RUNTIME=docker $0 build                       # Use docker instead of podman
+  $0 build my_keyboard_left -DCONFIG_BT_DEVICE_NAME="My Keyboard"    # Override a string config value
+  $0 build my_keyboard_left -DCONFIG_ZMK_STUDIO=y -DCONFIG_ZMK_STUDIO_LOCKING=n  # Bool overrides
+  $0 build 'anywhy*' -DCONFIG_BT_DEVICE_NAME="AnyWhy Flake White BT" # Override with wildcard
 
 EOF
 }
@@ -541,6 +582,18 @@ while [[ $# -gt 0 ]]; do
   case $1 in
   -i | --incremental)
     INCREMENTAL_FLAG="true"
+    shift
+    ;;
+  -D*)
+    # Collect cmake defines: -DCONFIG_FOO=bar or -D CONFIG_FOO=bar
+    if [[ "$1" == "-D" ]]; then
+      # Separate -D and value: -D CONFIG_FOO=bar
+      shift
+      EXTRA_CMAKE_ARGS+=("-D$1")
+    else
+      # Attached form: -DCONFIG_FOO=bar
+      EXTRA_CMAKE_ARGS+=("$1")
+    fi
     shift
     ;;
   *)
