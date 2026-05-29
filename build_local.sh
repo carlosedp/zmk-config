@@ -26,7 +26,8 @@ set -euo pipefail
 
 # Configuration
 RUNTIME="${RUNTIME:-podman}" # Could be docker or podman
-IMG="${ZMK_IMAGE:-docker.io/zmkfirmware/zmk-build-arm:4.1-branch}"
+IMG="${ZMK_IMAGE:-docker.io/zmkfirmware/zmk-build-arm:stable}"
+# IMG="${ZMK_IMAGE:-docker.io/zmkfirmware/zmk-build-arm:4.1-branch}"
 ENV="-e CMAKE_PREFIX_PATH=/zmk/zephyr:${CMAKE_PREFIX_PATH:-}"
 COMMAND="$RUNTIME run --rm --workdir /zmk -v $(pwd):/zmk -v /tmp:/temp $ENV $IMG"
 BUILD_CONFIG="${BUILD_CONFIG:-build.yaml}"
@@ -207,6 +208,11 @@ build_target() {
     if [ "$artifact_name" = "$target_name" ]; then
       found=1
       log_info "Building ${artifact_name} firmware..."
+      log_info "Board: $board"
+      [ -n "$shield" ] && log_info "Shield: $shield"
+      [ -n "$snippet" ] && log_info "Snippet: $snippet"
+      [ -n "$cmake_args" ] && log_info "Extra CMake Args: $cmake_args"
+      log_info "Using build image $IMG with runtime $RUNTIME"
 
       # Build the command arguments
       local build_args=()
