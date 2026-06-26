@@ -18,7 +18,7 @@
 #define KEYS_R 52 53 54 55 56 57 6 7 8 9 10 11 18 19 20 21 22 23 30 31 32 33 34 35 // right hand
 #define THUMBS 36 37 38 39 40 41 42 43 44 45                                       // thumbs
 
-#define TAPPING_TERM_MS 250
+#define TAPPING_TERM_MS 300
 #define QUICK_TAP_MS 175
 #define PRIOR_IDLE_MS 150
 
