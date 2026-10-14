@@ -14,16 +14,16 @@ layers:
   - P
   - {t: \, s: '|'}
   - $$mdi:keyboard-tab$$
-  - {t: A, h: '$$mdi:apple-keyboard-control$$'}
-  - {t: S, h: '&sl_ga'}
-  - {t: D, h: '&sl_ag'}
-  - {t: F, h: '$$mdi:apple-keyboard-shift$$'}
+  - A
+  - S
+  - D
+  - F
   - G
   - H
-  - {t: J, h: '$$mdi:apple-keyboard-shift$$'}
-  - {t: K, h: '&sl_ga'}
-  - {t: L, h: '&sl_ag'}
-  - {t: ;, h: '$$mdi:apple-keyboard-control$$', s: ':'}
+  - J
+  - K
+  - L
+  - {t: ;, s: ':'}
   - .
   - $$mdi:apple-keyboard-shift$$
   - Z
