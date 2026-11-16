@@ -1,16 +1,16 @@
 # ZMK Firmware configuration for my keyboards
 
-This repo contains the ZMK firmware configuration for my keyboards, including the Anywhy Flake and the Eyelash Sofle. It includes custom keymaps, build configurations, and shield overlays for these keyboards.
+This repo contains the ZMK firmware configuration for my keyboards, including the Lever Flake and the Eyelash Sofle. It includes custom keymaps, build configurations, and shield overlays for these keyboards.
 
-## Anywhy Flake
+## Lever Flake
 
 ![Flake Picture](./docs/flake.jpg)
 
-This is the ZMK firmware for the [Anywhy Flake](https://github.com/anywhy-io/flake) keyboard with my custom keymap.
+This is the ZMK firmware for the [Lever Flake](https://github.com/lever-tech/flake) keyboard with my custom keymap.
 
-![Anywhy Flake Keymap](keymap-drawer/anywhy_flake.svg)
+![Lever Flake Keymap](keymap-drawer/lever_flake.svg)
 
-The original keymap is available at <https://github.com/anywhy-io/flake-zmk-module> and the Flake keyboard project is at <https://github.com/anywhy-io/flake>.
+The original keymap is available at <https://github.com/lever-tech/flake-firmware> and the Flake keyboard project is at <https://github.com/lever-tech/flake>.
 
 ## Eyelash Sofle
 

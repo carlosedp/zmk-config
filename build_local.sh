@@ -356,7 +356,32 @@ init() {
 update() {
   log_info "Updating repository..."
   $COMMAND west update
+  check_flake_upstream
   log_info "Update complete."
+}
+
+# Compare the pinned flake-firmware fork against its upstream (informational only)
+check_flake_upstream() {
+  local upstream="https://github.com/lever-tech/flake-firmware.git"
+  local fork="https://github.com/carlosedp/flake-firmware.git"
+  local pinned up_head fork_head
+
+  pinned=$(awk '/name: flake-firmware/{f=1} f&&/revision:/{print $2; exit}' config/west.yml)
+  up_head=$(git ls-remote "$upstream" HEAD 2>/dev/null | cut -f1)
+  fork_head=$(git ls-remote "$fork" HEAD 2>/dev/null | cut -f1)
+
+  if [ -z "$up_head" ] || [ -z "$fork_head" ]; then
+    log_warning "Could not reach upstream or fork to check flake-firmware (offline or repo gone?)"
+    return 0
+  fi
+
+  if [ "$up_head" != "$fork_head" ]; then
+    log_warning "Upstream flake-firmware (${up_head:0:7}) is ahead of your fork (${fork_head:0:7}). Sync the fork on GitHub, review, then bump the revision in config/west.yml."
+  elif [ "$fork_head" != "$pinned" ]; then
+    log_warning "Fork is up to date with upstream (${fork_head:0:7}) but west.yml pins ${pinned:0:7}. Review and bump the revision in config/west.yml."
+  else
+    log_info "flake-firmware is pinned to the latest upstream (${pinned:0:7})."
+  fi
 }
 
 check_init() {
@@ -601,7 +626,7 @@ Examples:
   $0 list                                       # List all available targets
   $0 build                                      # Build all firmware from build.yaml
   $0 build my_keyboard_left                     # Build specific target
-  $0 build 'anywhy*'                            # Build all targets matching a wildcard
+  $0 build 'lever*'                            # Build all targets matching a wildcard
   $0 clean                                      # Clean build artifacts
   $0 clean my_keyboard_left                     # Clean specific target
   $0 clean_all                                  # Clean all west dependencies
@@ -613,7 +638,7 @@ Examples:
   RUNTIME=docker $0 build                       # Use docker instead of podman
   $0 build my_keyboard_left -DCONFIG_BT_DEVICE_NAME="My Keyboard"    # Override a string config value
   $0 build my_keyboard_left -DCONFIG_ZMK_STUDIO=y -DCONFIG_ZMK_STUDIO_LOCKING=n  # Bool overrides
-  $0 build 'anywhy*' -DCONFIG_BT_DEVICE_NAME="AnyWhy Flake White BT" # Override with wildcard
+  $0 build 'lever*' -DCONFIG_BT_DEVICE_NAME="Lever Flake White BT" # Override with wildcard
 
 EOF
 }

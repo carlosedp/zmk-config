@@ -10,6 +10,10 @@ manifest:
       url-base: https://github.com/M165437
     - name: mctechnology17
       url-base: https://github.com/mctechnology17
+    - name: carlosedp
+      url-base: https://github.com/carlosedp
+    # - name: zmk-nice-oled-alt
+    #   url-base: https://gitlab.com/open-source-open-colab
   projects:
     - name: zmk
       remote: zmkfirmware
@@ -25,7 +29,8 @@ manifest:
       revision: main
       path: deps/nice-view-gem
     - name: zmk-nice-oled
-      remote: mctechnology17
+      remote: mctechnology17 # switched to alternative remote for zmk-nice-oled until it suppports ZMK 4.1
+      # remote: zmk-nice-oled-alt
       revision: main
       path: deps/zmk-nice-oled
     - name: hammerbeam-slideshow
@@ -36,5 +41,11 @@ manifest:
       remote: mctechnology17
       revision: main
       path: deps/zmk-switch-layout
+    # Fork of https://github.com/lever-tech/flake-firmware (Lever Flake shield), pinned to a commit.
+    # Bump the SHA after syncing the fork and reviewing the changes (see `./build_local.sh update`).
+    - name: flake-firmware
+      remote: carlosedp
+      revision: 004650b51da5a943030962b89b37f8896064d013
+      path: deps/flake-firmware
   self:
     path: config

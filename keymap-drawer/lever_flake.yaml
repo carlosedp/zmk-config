@@ -1,4 +1,4 @@
-layout: {zmk_keyboard: anywhy_flake, layout_name: medium_layout}
+layout: {zmk_keyboard: lever_flake, layout_name: medium_layout}
 layers:
   base:
   - {t: '$$mdi:keyboard-esc$$', s: '`'}
