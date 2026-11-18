@@ -19,5 +19,5 @@ jobs:
       config_path: "keymap-drawer/config.yaml" # config file, ignored if not exists
       output_folder: "keymap-drawer" # path to save produced SVG and keymap YAML files
       parse_args: "" # map of extra args to pass to `keymap parse`, e.g. "corne:'-l Def Lwr Rse' cradio:''"
-      draw_args: "anywhy_flake:'--dts-layout ./boards/shields/anywhy_flake/anywhy_flake.dtsi'" # map of extra args to pass to `keymap draw`
+      draw_args: "" # map of extra args to pass to `keymap draw`
       fail_on_error: ${{ fromJSON(true) }}
