@@ -601,7 +601,7 @@ Examples:
   $0 list                                       # List all available targets
   $0 build                                      # Build all firmware from build.yaml
   $0 build my_keyboard_left                     # Build specific target
-  $0 build 'anywhy*'                            # Build all targets matching a wildcard
+  $0 build 'eyelash*'                            # Build all targets matching a wildcard
   $0 clean                                      # Clean build artifacts
   $0 clean my_keyboard_left                     # Clean specific target
   $0 clean_all                                  # Clean all west dependencies
